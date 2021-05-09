@@ -107,11 +107,6 @@ async function search_post_function(dataObject) {
   """ */
   async function query_all_posts_function() {
     const url = expressServerBase + "api/posts/query_all_posts";
-  
-  
-  
-  
-  
     const data = {
   
     };

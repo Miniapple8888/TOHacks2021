@@ -24,9 +24,8 @@ export default defineComponent({
       return {
         mapDiv: null,
         center: [null, null],
-        markers: [], // coords for all the makers on map
+        markers: [], // coords for all the markers on map
         marks: [],  // leaflet js mark objects
-        results: []
       }
     },
     methods: {
@@ -46,18 +45,29 @@ export default defineComponent({
           this.addMarkers();
         },
         addMarkers() {
-          //this.marks[this.markCount] = L.marker(this.center).addTo(this.mapDiv);
+          /*
           this.markers.forEach((mark, index) => {
-            this.marks[index] = L.marker(mark).addTo(this.mapDiv)
-            console.log(this.marks[index]);
+            mark.leafletObj = L.marker([mark.latitude, mark.longitude]).addTo(this.mapDiv)
+              .bindPopup(`<b>mark.title</b><br /> <img src="${mark.url}" />`);
+          })
+          */
+          console.log(this.markers);
+          this.markers.forEach((mark, index) => {
+            this.marks[index] = L.marker(mark).addTo(this.mapDiv);
+            this.marks[index].bindPopup(`${mark}`)
           })
         },
         getLocations() {
-          // this.results = await query_all_posts_function()
+          /* 
+          let results = await query_all_posts_function();
+          if (results.success) {
+            this.markers = this.results.posts.slice();
+          }
+          */
           this.markers= [
             [this.center[0], this.center[1]],
-            [this.center[0] + 1, this.center[1]],
-            [this.center[0] + 3, this.center[1] + 10]
+            [this.center[0] + 25, this.center[1]],
+            [this.center[0] + 15, this.center[1] + 30]
           ]
         },
         getCurrentLocation() {
