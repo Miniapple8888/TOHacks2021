@@ -86,7 +86,7 @@ Back end: (Node, Express)
 A search in hackathon project ideas yielded the idea of creating an app that would allow photographers to find their photoshoot location based on some keyword.
 
 ## What it does
-MaPic is a mobile-first designed web app app that makes it easier than every to find photoshoot locations. Photographers all around the world can use the app to enter a keyword and get a list of all the known spots near them. The users can also help grow the MaPic database by creating an account and submitting their favourite spots.
+MaPic is a mobile-first designed web app app that makes it easier than every to find photoshoot locations. Photographers all around the world can use the app to enter a keyword and get a list of all the known spots near them. Users can also help grow the MaPic database by creating an account and submitting their favourite spots.
 
 ## How we built it
 We built the frontend using Vuejs. Particularly, we used vue-bootstrap to create a friendly modern-looking ui. We used leaflet to display a map of the locations on the map with markers. The backend was built with an express server using nodejs. The Google api was used.

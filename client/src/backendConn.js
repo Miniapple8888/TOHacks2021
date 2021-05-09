@@ -1,5 +1,5 @@
 const expressServerBase = "http://0.0.0.0:8082/";
-
+const fetch = require('node-fetch');
 
 async function create_post_function(dataObject) {
   const url = expressServerBase + "api/posts/create_post";
@@ -30,7 +30,7 @@ async function create_post_function(dataObject) {
     },
     redirect: "follow", // manual, *follow, error
     referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-    body: JSON.stringify(data), // body data type must match "Content-Type" header
+    body: (data), // body data type must match "Content-Type" header
   });
   const returnData = await response.json();
   console.log("Create post request result:: " + JSON.stringify(returnData));
@@ -52,21 +52,22 @@ async function search_post_function(dataObject) {
       keyword: keyword,
       latitude: latitude,
       longitude: longitude,
-      maxPosts: maxPosts,
+      maxPosts: maxPosts
     };
-  
-    const response = await fetch(url, {
-      method: "POST",
-      mode: "no-cors",
-      cache: "no-cache",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      redirect: "follow", // manual, *follow, error
-      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(data), // body data type must match "Content-Type" header
-    });
+  console.log("JSON Data in search_post_function: " + JSON.stringify(data));
+  const response = await fetch(url, {
+    method: "POST",
+    mode: "no-cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+    },
+    redirect: "follow", // manual, *follow, error
+    referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    body: JSON.stringify(data), // body data type must match "Content-Type" header
+  });
     const returnData = await response.json();
     console.log("Search post request result: " + JSON.stringify(returnData));
   
@@ -121,7 +122,7 @@ async function search_post_function(dataObject) {
       },
       redirect: "follow", // manual, *follow, error
       referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(data), // body data type must match "Content-Type" header
+      body: data, // body data type must match "Content-Type" header
     });
     const returnData = await response.json();
     console.log("Search post request result: " + JSON.stringify(returnData));
@@ -165,7 +166,7 @@ async function search_post_function(dataObject) {
       },
       redirect: "follow", // manual, *follow, error
       referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(data), // body data type must match "Content-Type" header
+      body: (data), // body data type must match "Content-Type" header
     });
     const returnData = await response.json();
     console.log("Signup request result: " + JSON.stringify(returnData));
@@ -205,7 +206,7 @@ async function search_post_function(dataObject) {
       },
       redirect: "follow", // manual, *follow, error
       referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(data), // body data type must match "Content-Type" header
+      body: (data), // body data type must match "Content-Type" header
     });
     const returnData = await response.json();
     console.log("Login request result: " + JSON.stringify(returnData));

@@ -19,7 +19,10 @@
           <b-button variant="white">Recent</b-button>
         </div>
     </b-jumbotron>
-      <Map />
+      <Map v-if="userCoords" :markers="locations" :currPos="userCoords" />
+      <div v-else style="text-align: center; color: white; font-size: 1.2rem; width: 95vw; margin: 0 auto;">
+        <p>Please allow location services to display map.</p>
+      </div>
     
     <!--
       <b-container>
@@ -48,7 +51,7 @@
 
 <script>
 import Map from '../components/Map';
-import {search_post_function} from './../backendConn.js';
+import {query_all_posts_function} from './../backendConn.js';
 
 export default {
   name: 'Home',
@@ -58,6 +61,7 @@ export default {
   data() {
     return {
       search: '',
+      userCoords: null, // current geoposition from browser
       currentLocation: {
         id:0,
         title: '',
@@ -73,7 +77,6 @@ export default {
     }
   },
   methods: {
-    
     stopProcess(e) {
       e.preventDefault()
       // gets parent location to get the id of the location and display in modal
@@ -98,34 +101,41 @@ export default {
           const { latitude, longitude } = position.coords;
           const apikey = '756a63ee12b6463ca4c4528cde632393';
           fetch(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apikey}`).then(response => response.json().then(console.log));
-        }*/
+        }
         // Set variables for body JSON
         var lat='';
         var long='';
         window.navigator.geolocation.getCurrentPosition((position)=>{
           const { latitude, longitude } = position.coords;
           const apikey = '756a63ee12b6463ca4c4528cde632393';
-          lat=latitude;
-          long=longitude;
+          lat=this.userCoords[0];
+          long=this.userCoords[1];
           fetch(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apikey}`).then(console.log);
         }, console.log)
-        var maxPosts = "10";
         console.log(lat+long)
-        const data = {
-            keyword: this.search,
-            latitude: "13.43534535",
-            longitude: "14.54535345",
-            maxPosts: maxPosts,
-        }
-        let returnData = await search_post_function(data)
-        console.log(returnData)
+        */
+        //let returnData = await search_post_function(data)
+        await this.get_all()
         
+    },
+    async get_all() {
+      let returnData = await query_all_posts_function()
+      console.log("posted")
+      console.log(returnData)
+      this.locations = returnData.posts.slice(); // deep array copy without reference
+      console.log(this.locations)
+    },
+    getCurrentLocation() {
+      if (navigator.geolocation) navigator.geolocation.getCurrentPosition(this.printPos)
+      // if (navigator.geolocation) navigator.geolocation.watchPosition(this.printPos)
+    },
+    printPos(p) {
+      this.userCoords = [p.coords.latitude, p.coords.longitude];
     }
   },
-  created() {
-    // check if user is logged in, else send to login page
-  },
   mounted() {
+    this.getCurrentLocation();
+    this.get_all()
   }
 }
 </script>

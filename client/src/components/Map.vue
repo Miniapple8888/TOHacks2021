@@ -2,7 +2,6 @@
   <div id="map">
     <div id="mapContainer" class="mapContainer">
       <p>Loading Map...</p>
-      <p>Please allow location services to display map.</p>
       <p>User locations are not saved or shared with 3rd parties</p>
     </div>
   </div>
@@ -17,20 +16,18 @@ import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
     name: "Map",
+    props: ['markers', 'currPos'],
     setup() {
       
     },
     data() {
       return {
         mapDiv: null,
-        center: [null, null],
-        markers: [], // coords for all the markers on map
-        marks: [],  // leaflet js mark objects
       }
     },
     methods: {
         setupLeafletMap () {
-          this.mapDiv = L.map("mapContainer").setView(this.center, 13);
+          this.mapDiv = L.map("mapContainer").setView(this.currPos, 13);
           L.tileLayer(
             "https://api.mapbox.com/styles/v1/miniapple8888/cklo4ivjr42cr17k8xtyqd3b7/tiles/256/{z}/{x}/{y}@2x?access_token={accessToken}",
           {
@@ -40,43 +37,25 @@ export default defineComponent({
             id: "mapbox/streets-v11",
             accessToken: 'pk.eyJ1IjoiYXRhd2FrbCIsImEiOiJja29ncHE2azMwZXhsMnFsbHpxNGhvdmZyIn0.E4dMkWfUlVbW_r4ekxPYYg',
           }).addTo(this.mapDiv);
-          // Map markers
-          this.getLocations();
-          this.addMarkers();
+          
+          // Add markers to map if any
+          if (!this.markers.length) {
+            this.markers.forEach(mark => this.addMarker(mark));
+          }
         },
-        addMarkers() {
+        addMarker(point) {
+          point.leafObj = L.marker([point.latitude, point.longitude]).addTo(this.mapDiv)
+            .bindPopup(`<b>point.title</b><br /> <img src="${point.url}" />`);
           /*
-          this.markers.forEach((mark, index) => {
+          console.log(point);
+          this.markers[0].leafletObj = L.marker([this.markers[0].latitude, this.markers[0].longitude]).addTo(this.mapDiv)
+            .bindPopup(`<b>this.markers[0].title</b><br /> <img src="${this.markers[0].url}" />`);
+          this.markers.forEach((mark) => {
             mark.leafletObj = L.marker([mark.latitude, mark.longitude]).addTo(this.mapDiv)
               .bindPopup(`<b>mark.title</b><br /> <img src="${mark.url}" />`);
+            console.log(mark);
           })
           */
-          console.log(this.markers);
-          this.markers.forEach((mark, index) => {
-            this.marks[index] = L.marker(mark).addTo(this.mapDiv);
-            this.marks[index].bindPopup(`${mark}`)
-          })
-        },
-        getLocations() {
-          /* 
-          let results = await query_all_posts_function();
-          if (results.success) {
-            this.markers = this.results.posts.slice();
-          }
-          */
-          this.markers= [
-            [this.center[0], this.center[1]],
-            [this.center[0] + 25, this.center[1]],
-            [this.center[0] + 15, this.center[1] + 30]
-          ]
-        },
-        getCurrentLocation() {
-          if (navigator.geolocation) navigator.geolocation.getCurrentPosition(this.printPos)
-        },
-        printPos(p) {
-          this.center = [p.coords.latitude, p.coords.longitude];
-          // Build leaflet js map
-          this.setupLeafletMap();
         }
         /*
         addMarkers() {
@@ -91,8 +70,8 @@ export default defineComponent({
         */
     },
     mounted() {
-      this.getCurrentLocation();
-    },
+      this.setupLeafletMap();
+    }
 })
 </script>
 <style scoped lang="scss">
